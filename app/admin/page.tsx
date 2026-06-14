@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Upload, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Upload, CheckCircle, AlertCircle, Loader, RefreshCcw } from 'lucide-react';
 import { importLeagueData } from '../lib/importLeague';
+import { fetchCollection } from '../lib/firestore';
 
 export default function AdminPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -11,6 +12,13 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [importStats, setImportStats] = useState<{
+    teams: number;
+    players: number;
+    games: number;
+    playoffSeries: number;
+  } | null>(null);
+  const [loadingStats, setLoadingStats] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files?.[0] || null);
@@ -20,6 +28,32 @@ export default function AdminPage() {
   };
 
   const MAX_SERVER_POST_SIZE = 20 * 1024 * 1024; // 20MB
+
+  const loadImportStats = async () => {
+    setLoadingStats(true);
+    try {
+      const [teams, players, games, playoffSeries] = await Promise.all([
+        fetchCollection('teams'),
+        fetchCollection('players'),
+        fetchCollection('games'),
+        fetchCollection('playoffSeries')
+      ]);
+      setImportStats({
+        teams: teams.length,
+        players: players.length,
+        games: games.length,
+        playoffSeries: playoffSeries.length
+      });
+    } catch (err) {
+      console.error('Failed to load import stats', err);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  useEffect(() => {
+    loadImportStats();
+  }, []);
 
   const handleImport = async () => {
     if (!file) {
@@ -41,6 +75,7 @@ export default function AdminPage() {
         await importLeagueData(data, importMode);
         setStatus(`✅ League import completed successfully.`);
         setSuccess(true);
+        await loadImportStats();
       } catch (errInner) {
         const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
         const shouldAttemptServerFallback = isLocal && file.size <= MAX_SERVER_POST_SIZE;
@@ -53,6 +88,7 @@ export default function AdminPage() {
             if (res.ok && json.ok) {
               setStatus(`✅ Fallback import completed: ${json.teams} teams, ${json.players} players`);
               setSuccess(true);
+              await loadImportStats();
               return;
             } else {
               throw new Error(json.error || 'Fallback import failed');
@@ -116,11 +152,11 @@ export default function AdminPage() {
                   <p className="text-sm text-bml-muted">Size: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
                   {file.size > MAX_SERVER_POST_SIZE ? (
                     <p className="text-sm text-yellow-300">
-                      Note: this file is larger than 3 MB. Local fallback import via <code>/api/import</code> may not work.
+                      Note: this file is larger than 20 MB. Local fallback import via <code>/api/import</code> may not work.
                     </p>
                   ) : (
                     <p className="text-sm text-bml-muted">
-                      Local fallback import is available for files smaller than 3 MB.
+                      Local fallback import is available for files up to 20 MB.
                     </p>
                   )}
                 </div>
@@ -187,6 +223,43 @@ export default function AdminPage() {
                 <AlertCircle className="text-red-400 flex-shrink-0 mt-0.5" size={20} />
                 <div>
                   <p className="text-sm text-red-300">{error}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {importStats && (
+            <div className="p-4 rounded-xl border border-white/10 bg-white/5">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Imported Data Summary</h3>
+                  <p className="text-sm text-bml-muted">Verify the counts in Firestore after import.</p>
+                </div>
+                <button
+                  onClick={loadImportStats}
+                  disabled={loadingStats}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white transition hover:bg-white/10 disabled:opacity-50"
+                >
+                  <RefreshCcw size={16} />
+                  Refresh
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div className="rounded-xl bg-bml-surface p-4 text-center">
+                  <p className="text-3xl font-semibold text-white">{importStats.teams}</p>
+                  <p className="text-sm text-bml-muted">Teams</p>
+                </div>
+                <div className="rounded-xl bg-bml-surface p-4 text-center">
+                  <p className="text-3xl font-semibold text-white">{importStats.players}</p>
+                  <p className="text-sm text-bml-muted">Players</p>
+                </div>
+                <div className="rounded-xl bg-bml-surface p-4 text-center">
+                  <p className="text-3xl font-semibold text-white">{importStats.games}</p>
+                  <p className="text-sm text-bml-muted">Games</p>
+                </div>
+                <div className="rounded-xl bg-bml-surface p-4 text-center">
+                  <p className="text-3xl font-semibold text-white">{importStats.playoffSeries}</p>
+                  <p className="text-sm text-bml-muted">Playoff Series</p>
                 </div>
               </div>
             </div>
