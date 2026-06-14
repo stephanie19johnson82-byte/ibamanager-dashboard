@@ -40,13 +40,26 @@ export async function updateDocFields(collectionName: string, id: string, data: 
   await updateDoc(docRef, data);
 }
 
+const MAX_BATCH_SIZE = 400;
+
+function chunkArray<T>(items: T[], size: number) {
+  const chunks: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size));
+  }
+  return chunks;
+}
+
 export async function batchWrite(
   records: Array<{ collectionName: string; id: string; data: DocumentData }>
 ) {
-  const batch = writeBatch(db);
-  records.forEach(({ collectionName, id, data }) => {
-    const ref = doc(db, collectionName, id);
-    batch.set(ref, data, { merge: true });
-  });
-  await batch.commit();
+  const chunks = chunkArray(records, MAX_BATCH_SIZE);
+  for (const chunk of chunks) {
+    const batch = writeBatch(db);
+    chunk.forEach(({ collectionName, id, data }) => {
+      const ref = doc(db, collectionName, id);
+      batch.set(ref, data, { merge: true });
+    });
+    await batch.commit();
+  }
 }

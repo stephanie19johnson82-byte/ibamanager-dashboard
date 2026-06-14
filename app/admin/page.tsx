@@ -19,6 +19,8 @@ export default function AdminPage() {
     setStatus('');
   };
 
+  const MAX_SERVER_POST_SIZE = 3 * 1024 * 1024; // 3MB
+
   const handleImport = async () => {
     if (!file) {
       setError('Please select a JSON file first');
@@ -40,19 +42,33 @@ export default function AdminPage() {
         setStatus(`✅ League import completed successfully.`);
         setSuccess(true);
       } catch (errInner) {
-        // Try server-side fallback which posts to emulator via REST
-        setStatus('Client import failed, attempting server-side fallback...');
-        try {
-          const res = await fetch('/api/import', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
-          const json = await res.json();
-          if (res.ok && json.ok) {
-            setStatus(`✅ Fallback import completed: ${json.teams} teams, ${json.players} players`);
-            setSuccess(true);
-          } else {
-            throw new Error(json.error || 'Fallback import failed');
+        const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        const shouldAttemptServerFallback = isLocal && file.size <= MAX_SERVER_POST_SIZE;
+
+        if (shouldAttemptServerFallback) {
+          setStatus('Client import failed, attempting local server-side fallback...');
+          try {
+            const res = await fetch('/api/import', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
+            const json = await res.json();
+            if (res.ok && json.ok) {
+              setStatus(`✅ Fallback import completed: ${json.teams} teams, ${json.players} players`);
+              setSuccess(true);
+              return;
+            } else {
+              throw new Error(json.error || 'Fallback import failed');
+            }
+          } catch (fallbackErr) {
+            const message = fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr);
+            setError(`Fallback import failed: ${message}`);
+            return;
           }
-        } catch (fallbackErr) {
-          throw fallbackErr;
+        }
+
+        const message = errInner instanceof Error ? errInner.message : String(errInner);
+        if (!isLocal && file.size > MAX_SERVER_POST_SIZE) {
+          setError(`Import failed: ${message}. This JSON file is too large to send through /api/import on this deployment. Please import locally or reduce the file size.`);
+        } else {
+          setError(`Import failed: ${message}. If you are using a browser extension that blocks Firebase or Cloud Firestore, disable it and try again.`);
         }
       }
     } catch (err) {
@@ -95,7 +111,19 @@ export default function AdminPage() {
                 className="block w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-gray-400 transition focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
               />
               {file && (
-                <p className="mt-2 text-sm text-blue-300">Selected: {file.name}</p>
+                <div className="space-y-2">
+                  <p className="mt-2 text-sm text-blue-300">Selected: {file.name}</p>
+                  <p className="text-sm text-bml-muted">Size: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  {file.size > MAX_SERVER_POST_SIZE ? (
+                    <p className="text-sm text-yellow-300">
+                      Note: this file is larger than 3 MB. Local fallback import via <code>/api/import</code> may not work.
+                    </p>
+                  ) : (
+                    <p className="text-sm text-bml-muted">
+                      Local fallback import is available for files smaller than 3 MB.
+                    </p>
+                  )}
+                </div>
               )}
             </div>
 

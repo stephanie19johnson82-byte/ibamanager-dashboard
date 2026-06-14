@@ -1,5 +1,13 @@
 import { NextResponse } from 'next/server';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '20mb'
+    }
+  }
+};
+
 const EMULATOR_BASE = 'http://127.0.0.1:8080/v1/projects/demo-no-project/databases/(default)/documents';
 
 console.log('api/import route loaded');
