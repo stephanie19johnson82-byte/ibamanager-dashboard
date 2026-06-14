@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Players | BML</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body data-page="players" data-auth="required">
+  <div id="main-nav"></div>
+  <main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="h3 text-white">Player Search</h1>
+        <p class="text-secondary mb-0">Search all imported Basketball GM players by name, position, team and rating.</p>
+      </div>
+    </div>
+    <div class="card bg-dark border-secondary p-4 mb-4">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input id="player-search" class="form-control bg-transparent text-white border-secondary" placeholder="Search by name or team" />
+        </div>
+        <div class="col-md-2">
+          <select id="player-position" class="form-select bg-transparent text-white border-secondary">
+            <option value="">Position</option>
+            <option>PG</option>
+            <option>SG</option>
+            <option>SF</option>
+            <option>PF</option>
+            <option>C</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select id="player-ovr" class="form-select bg-transparent text-white border-secondary">
+            <option value="">OVR</option>
+            <option value="90">90+</option>
+            <option value="80">80+</option>
+            <option value="70">70+</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button id="player-filter-btn" class="btn btn-outline-light w-100">Filter</button>
+        </div>
+      </div>
+    </div>
+    <div id="player-list" class="row g-4"></div>
+  </main>
+  <div id="main-footer"></div>
+  <script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>

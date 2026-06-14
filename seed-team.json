@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "tid": { "integerValue": "0" },
+    "abbrev": { "stringValue": "TST" },
+    "region": { "stringValue": "Test" },
+    "name": { "stringValue": "Team" },
+    "wins": { "integerValue": "10" },
+    "losses": { "integerValue": "5" },
+    "value": { "integerValue": "88" },
+    "owner": { "stringValue": "Owner Name" }
+  }
+}

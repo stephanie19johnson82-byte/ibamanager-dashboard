@@ -1,0 +1,28 @@
+{
+  "name": "bml-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "emulate": "npx firebase emulators:start --only firestore,auth,storage",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "firebase": "^10.0.0",
+    "framer-motion": "11.3.6",
+    "lucide-react": "0.418.0",
+    "next": "^16.2.9",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.5",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "10.4.19",
+    "postcss": "8.4.40",
+    "tailwindcss": "3.4.5",
+    "typescript": "5.6.2"
+  }
+}

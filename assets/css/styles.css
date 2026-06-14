@@ -1,0 +1,229 @@
+:root {
+  color-scheme: dark;
+  --bg: #05070f;
+  --surface: rgba(10, 14, 24, 0.95);
+  --surface-soft: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f8f9fa;
+  --muted: #9aa8c3;
+  --accent: #3e9bff;
+  --accent-strong: #1f6feb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at top left, rgba(63, 162, 255, 0.10), transparent 18%),
+    radial-gradient(circle at 80% 0%, rgba(150, 81, 255, 0.10), transparent 14%),
+    linear-gradient(180deg, #07101d 0%, #05070f 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.06), transparent 16%),
+    radial-gradient(circle at 85% 10%, rgba(0, 154, 255, 0.08), transparent 12%);
+  opacity: 0.9;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+.container {
+  max-width: 1180px;
+}
+
+.navbar {
+  background: rgba(6, 10, 18, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.navbar .nav-link {
+  color: rgba(248, 249, 250, 0.78);
+  transition: color 0.2s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #ffffff;
+}
+
+.nav-frosted {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15);
+}
+
+.brand-icon {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(63, 162, 255, 0.14);
+}
+
+.main-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2.5rem 0;
+  background: transparent;
+}
+
+footer a {
+  color: rgba(248, 249, 250, 0.7);
+}
+
+footer a:hover {
+  color: #ffffff;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.35rem;
+  box-shadow: 0 32px 60px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 36px 75px rgba(0, 0, 0, 0.22);
+}
+
+.hero-banner {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-header-card {
+  padding: 1.85rem 1.85rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.feature-card h2 {
+  color: var(--text);
+}
+
+.form-control,
+.form-select,
+textarea {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(63, 162, 255, 0.9);
+  box-shadow: 0 0 0 0.25rem rgba(63, 162, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn {
+  border-radius: 999px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  border-color: transparent;
+  box-shadow: 0 12px 24px rgba(31, 111, 235, 0.28);
+}
+
+.btn-outline-light {
+  color: #edf2ff;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.badge {
+  border-radius: 999px;
+}
+
+.text-secondary,
+.text-white-50 {
+  color: var(--muted) !important;
+}
+
+.list-unstyled li {
+  margin-bottom: 0.65rem;
+}
+
+.table {
+  color: var(--text);
+}
+
+.table thead th {
+  color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.auth-card {
+  border-radius: 1.6rem;
+}
+
+@media (max-width: 991px) {
+  .navbar-nav {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .navbar .btn,
+  .navbar .nav-link {
+    width: 100%;
+  }
+
+  .hero-banner {
+    padding: 2rem 1.5rem;
+  }
+}

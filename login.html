@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | BML</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body data-page="login" data-auth="optional">
+  <div id="main-nav"></div>
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card bg-dark border-secondary shadow-sm">
+          <div class="card-body">
+            <h1 class="h3 text-white mb-4">Sign in to BML</h1>
+            <form id="login-form" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="email" class="form-label text-white">Email</label>
+                <input type="email" id="email" class="form-control bg-transparent text-white border-secondary" required />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label text-white">Password</label>
+                <input type="password" id="password" class="form-control bg-transparent text-white border-secondary" required />
+              </div>
+              <button class="btn btn-primary w-100" type="submit">Login</button>
+            </form>
+            <div class="mt-3 text-center text-secondary">
+              <a href="/register.html" class="text-decoration-none">Create a new account</a>
+            </div>
+            <div id="login-message" class="mt-3 text-warning"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div id="main-footer"></div>
+  <script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>

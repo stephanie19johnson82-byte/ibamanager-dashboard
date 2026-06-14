@@ -1,0 +1,12 @@
+{
+  "version": 72,
+  "meta": { "name": "Test League" },
+  "teams": [
+    { "tid": 0, "abbrev": "TST", "region": "Test", "name": "Team", "wins": 10, "losses": 5, "value": 88, "owner": "Owner Name" }
+  ],
+  "players": [
+    { "pid": 100, "firstName": "John", "lastName": "Doe", "age": 25, "pos": "G", "tid": 0, "ratings": { "ovr": 75, "pot": 80 }, "stats": [] }
+  ],
+  "games": [],
+  "schedule": []
+}
