@@ -65,3 +65,11 @@ com.google.cloud.datastore.core.exception.ValidationException: Nested arrays are
 
 Jun 14, 2026 8:15:49 PM io.gapi.emulators.netty.HttpHandler$1 onError
 INFO: Exception when handling request: INVALID_ARGUMENT: Nested arrays are not allowed
+Jun 14, 2026 8:16:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 14, 2026 8:16:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 14, 2026 8:25:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 14, 2026 8:25:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.

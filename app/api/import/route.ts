@@ -21,20 +21,22 @@ type FirestoreField =
   | { arrayValue: { values: FirestoreField[] } }
   | { mapValue: { fields: Record<string, FirestoreField> } };
 
+function arrayToField(values: any[]): FirestoreField {
+  const fields = values.map((value) => toField(value));
+  const hasNestedArray = fields.some((field) => 'arrayValue' in field);
+  if (hasNestedArray) {
+    return {
+      mapValue: {
+        fields: Object.fromEntries(fields.map((field, index) => [String(index), field]))
+      }
+    };
+  }
+  return { arrayValue: { values: fields } };
+}
+
 function toField(value: any): FirestoreField {
   if (value == null) return { nullValue: null };
-  if (Array.isArray(value)) {
-    const values = value.map((v) => toField(v));
-    const hasNestedArray = values.some((v) => 'arrayValue' in v);
-    if (hasNestedArray) {
-      return {
-        mapValue: {
-          fields: Object.fromEntries(values.map((v, i) => [String(i), v]))
-        }
-      };
-    }
-    return { arrayValue: { values } };
-  }
+  if (Array.isArray(value)) return arrayToField(value);
   if (typeof value === 'number' && Number.isInteger(value)) return { integerValue: String(value) };
   if (typeof value === 'number') return { doubleValue: value };
   if (typeof value === 'boolean') return { booleanValue: value };
@@ -104,6 +106,18 @@ function buildGenericFields(obj: any) {
   return f;
 }
 
+function normalizeImportData(data: any) {
+  if (Array.isArray(data)) {
+    return data.map(normalizeImportData);
+  }
+  if (data && typeof data === 'object') {
+    return Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [key, normalizeImportData(value)])
+    );
+  }
+  return data;
+}
+
 async function writeDoc(collection: string, id: string, fields: Record<string, any>) {
   const url = `${EMULATOR_BASE}/${collection}/${encodeURIComponent(String(id))}`;
   const res = await fetch(url, { method: 'PATCH', body: JSON.stringify({ fields }), headers: { 'Content-Type': 'application/json' } });
@@ -135,7 +149,7 @@ async function deleteCollection(collection: string) {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = normalizeImportData(await req.json());
     const teams = body.teams || [];
     const players = body.players || [];
     const games = body.games || [];

@@ -19,7 +19,7 @@ export default function AdminPage() {
     setStatus('');
   };
 
-  const MAX_SERVER_POST_SIZE = 3 * 1024 * 1024; // 3MB
+  const MAX_SERVER_POST_SIZE = 20 * 1024 * 1024; // 20MB
 
   const handleImport = async () => {
     if (!file) {
