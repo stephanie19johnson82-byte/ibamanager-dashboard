@@ -23,7 +23,18 @@ type FirestoreField =
 
 function toField(value: any): FirestoreField {
   if (value == null) return { nullValue: null };
-  if (Array.isArray(value)) return { arrayValue: { values: value.map((v) => toField(v)) } };
+  if (Array.isArray(value)) {
+    const values = value.map((v) => toField(v));
+    const hasNestedArray = values.some((v) => 'arrayValue' in v);
+    if (hasNestedArray) {
+      return {
+        mapValue: {
+          fields: Object.fromEntries(values.map((v, i) => [String(i), v]))
+        }
+      };
+    }
+    return { arrayValue: { values } };
+  }
   if (typeof value === 'number' && Number.isInteger(value)) return { integerValue: String(value) };
   if (typeof value === 'number') return { doubleValue: value };
   if (typeof value === 'boolean') return { booleanValue: value };
